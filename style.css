@@ -764,7 +764,7 @@
   }
 
   .dot-tourist { background: var(--gold); }
-  .dot-cafe { background: #5dcaa5; }
+  .dot-hidden gem { background: #5dcaa5; }
   .dot-restaurant { background: #e07a55; }
   .dot-business { background: #b0a8e8; }
 
