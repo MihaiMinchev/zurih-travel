@@ -225,3 +225,63 @@ function showError(msg) {
 function hideError() {
   document.getElementById('plan-error').classList.remove('visible');
 }
+
+function generatePlan() {
+  hideError();
+
+  if (planInterests.size === 0) {
+    showError("Please select at least one interest to generate your plan.");
+    return;
+  }
+
+  const interestMap = {
+    history: ['Tourist Place', 'Hidden Gem'],
+    food: ['Cafe', 'Restaurant'],
+    nature: ['Hidden Gem', 'Tourist Place']
+  };
+
+  let filtered = attractions.filter(p =>
+    [...planInterests].some(key => interestMap[key]?.includes(p.category))
+  );
+
+  if (!filtered.length) {
+    showError("No places match your selected interests.");
+    return;
+  }
+
+  // Разбъркване за разнообразие
+  filtered = filtered.sort(() => Math.random() - 0.5);
+
+  // Равномерно разпределение по дни
+  const plan = Array.from({ length: planDays }, () => []);
+  filtered.forEach((place, i) => {
+    plan[i % planDays].push(place);
+  });
+
+  // При relaxed режим — ограничаваме местата на ден
+  if (planDiff === 'relaxed') {
+    const maxPerDay = Math.floor(filtered.length / planDays) || 1;
+    plan.forEach((day, i) => {
+      plan[i] = day.slice(0, maxPerDay);
+    });
+  }
+
+  // Рендиране
+  const container = document.getElementById('plan-results');
+  container.innerHTML = plan.map((dayPlaces, i) => `
+    <div class="plan-day">
+      <h3>Day ${i + 1}</h3>
+      ${dayPlaces.length
+        ? `<ul>
+            ${dayPlaces.map(p => `
+              <li>
+                <strong>${p.name}</strong> (${p.category})<br>
+                ${(p.description ?? '').substring(0, 100)}…
+              </li>
+            `).join('')}
+           </ul>`
+        : '<p>No places scheduled for this day.</p>'
+      }
+    </div>
+  `).join('');
+}
