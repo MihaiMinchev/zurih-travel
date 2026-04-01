@@ -234,13 +234,13 @@ function generatePlan() {
     return;
   }
 
-const interestMap = {
-  history:  ['Historic Site', 'Tourist Place'],
-  romantic: ['Romantic Spot', 'Hidden Gem'],
-  scenic:   ['Scenic View', 'Tourist Place'],
-  food:     ['Restaurant', 'Cafe', 'Bar'],
-  hidden:   ['Hidden Gem']
-};
+  const interestMap = {
+    history:  ['Historic Site', 'Tourist Place'],
+    romantic: ['Romantic Spot', 'Hidden Gem'],
+    scenic:   ['Scenic View', 'Tourist Place'],
+    food:     ['Restaurant', 'Cafe', 'Bar'],
+    hidden:   ['Hidden Gem']
+  };
 
   let filtered = attractions.filter(p =>
     [...planInterests].some(key => interestMap[key]?.includes(p.category))
@@ -251,16 +251,16 @@ const interestMap = {
     return;
   }
 
-  // Разбъркване за разнообразие
+  // Shuffle
   filtered = filtered.sort(() => Math.random() - 0.5);
 
-  // Равномерно разпределение по дни
+  // Distribute per day
   const plan = Array.from({ length: planDays }, () => []);
   filtered.forEach((place, i) => {
     plan[i % planDays].push(place);
   });
 
-  // При relaxed режим — ограничаваме местата на ден
+  // Relaxed mode
   if (planDiff === 'relaxed') {
     const maxPerDay = Math.floor(filtered.length / planDays) || 1;
     plan.forEach((day, i) => {
@@ -268,8 +268,10 @@ const interestMap = {
     });
   }
 
-  // Рендиране
+  // Render results
   const container = document.getElementById('plan-results');
+  if (!container) return;
+
   container.innerHTML = plan.map((dayPlaces, i) => `
     <div class="plan-day">
       <h3>Day ${i + 1}</h3>
