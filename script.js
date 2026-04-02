@@ -303,7 +303,7 @@ Write in English.`;
 
   if (!filtered.length) {
     showError("No places match your selected interests.");
-    return;
+
   }
 
   // Shuffle
