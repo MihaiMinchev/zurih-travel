@@ -286,7 +286,7 @@ Write in English.`;
 
   if (planInterests.size === 0) {
     showError("Please select at least one interest to generate your plan.");
-    return;
+   
   }
 
   const interestMap = {
